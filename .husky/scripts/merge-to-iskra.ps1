@@ -9,6 +9,12 @@ param
 $CurrentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host ">>> Currently on $CurrentBranch"
 
+# Если мы уже на ветке iskra — не делаем ничего
+if ($CurrentBranch -eq "iskra") {
+    # Write-Host "Already on iskra — skipping merge hook"
+    exit 0
+}
+
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
 Write-Host ">>> Git status: $gitStatus"
