@@ -1,17 +1,16 @@
 param
 (
-    [string]$Remote = "origin",
-    [string]$MainBranch = "master",
-    [string]$TestBranch = "iskra"
+    [string]$Origin = "origin",
+    [string]$Master = "master",
+    [string]$Iskra = "iskra"
 )
 
 # Определяем текущую ветку
-$CurrentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
-Write-Host ">>> Currently on $CurrentBranch"
+$DevBranch = (git rev-parse --abbrev-ref HEAD).Trim()
+Write-Host ">>> Currently on $DevBranch"
 
-# Если мы уже на ветке iskra — не делаем ничего
-if ($CurrentBranch -eq "iskra") {
-    # Write-Host "Already on iskra — skipping merge hook"
+# Если мы на ветке iskra или master — не делаем ничего
+if ($DevBranch -eq $Iskra -or $DevBranch -eq $Master) {
     exit 0
 }
 
@@ -20,58 +19,52 @@ $gitStatus = git status --porcelain
 Write-Host ">>> Git status: $gitStatus"
 if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false)
 {
-    # Working tree is dirty — commit or stash changes before running this script.
     exit 1
 }
 
-Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
-# Write-Host ">>> we were here"
-# Подтягиваем свежие изменения
-git fetch $Remote --prune
+# Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
+Write-Host ">>> Merging $Master into $DevBranch ..."
 
-# Создаём временную ветку от iskra (или от master, если iskra нет)
-# $timestamp = [int][double]::Parse((Get-Date -UFormat %s))
-# $tmpBranch = "tmp/merge-$($CurrentBranch.Replace('/', '-'))-$timestamp"
+# Подтягиваем свежие изменения из master в текущую ветку
+git fetch $Origin --prune
 
-# Write-Host ">>> Trying to checkout temporary branch $tmpBranch from $Remote/$TestBranch ..."
-# try
-# {
-#     git checkout -b $tmpBranch "$Remote/$TestBranch"
-#     # Write-Host ">>> Successfully created temporary branch $tmpBranch"
+# Пушим текущую ветку
+Write-Host ">>> Pushing to $Remote/$DevBranch..."
+git push $Remote "HEAD:$DevBranch"
+
+# Переключаемся на ветку iskra
+git checkout $Iskra | Out-Null
+
+# Подтягиваем свежие изменения из origin/iskra на локальную
+git fetch $Origin --prune
+
+Write-Host ">>> Merging $DevBranch into $Iskra ..."
+# Подтягиваем изменения из нашей ветки в iskra
+git merge --no-edit $DevBranch
+
+# Merge master в текущую ветку
+# Write-Host ">>> Merging $Remote/$MainBranch..."
+# if (-not (git merge --no-edit "$Remote/$MainBranch")) {
+#     # Write-Host "Conflict with $MainBranch — aborting."
+#     git merge --abort | Out-Null
+#     git checkout $CurrentBranch | Out-Null
+#     exit 1
 # }
-# catch
-# {
-#     # Write-Host "Remote $Remote/$TestBranch not found — creating from $Remote/$MainBranch" 
-#     git checkout -b $tmpBranch "$Remote/$MainBranch"
-#     # Write-Host ">>> Successfully created temporary branch $tmpBranch from $MainBranch"
+
+# # Merge текущей ветки
+# Write-Host ">>> Merging $CurrentBranch..."
+# if (-not (git merge --no-edit $CurrentBranch)) {
+#     # Write-Host "Conflict with $CurrentBranch — aborting."
+#     git merge --abort | Out-Null
+#     git checkout $CurrentBranch | Out-Null
+#     exit 1
 # }
 
-# Merge master
-Write-Host ">>> Merging $Remote/$MainBranch..."
-if (-not (git merge --no-edit "$Remote/$MainBranch")) {
-    # Write-Host "Conflict with $MainBranch — aborting."
-    git merge --abort | Out-Null
-    git checkout $CurrentBranch | Out-Null
-    git branch -D $tmpBranch | Out-Null
-    exit 1
-}
+# Пушим изменения в iskra
+Write-Host ">>> Pushing to $Remote/$Iskra..."
+git push $Remote "HEAD:$Iskra"
 
-# Merge текущей ветки
-Write-Host ">>> Merging $CurrentBranch..."
-if (-not (git merge --no-edit $CurrentBranch)) {
-    # Write-Host "Conflict with $CurrentBranch — aborting."
-    git merge --abort | Out-Null
-    git checkout $CurrentBranch | Out-Null
-    git branch -D $tmpBranch | Out-Null
-    exit 1
-}
+# Возвращаемся обратно
+git checkout $DevBranch | Out-Null
 
-# Пушим в iskra
-Write-Host ">>> Pushing to $Remote/$TestBranch..."
-git push $Remote "HEAD:$TestBranch"
-
-# Возвращаемся обратно и удаляем временную
-git checkout $CurrentBranch | Out-Null
-git branch -D $tmpBranch | Out-Null
-
-Write-Host ">>> Done! Merged into $Remote/$TestBranch"
+Write-Host ">>> Done! $DevBranch merged into $Remote/$Iskra"
