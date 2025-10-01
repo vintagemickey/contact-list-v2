@@ -16,30 +16,42 @@ if ($DevBranch -eq $Iskra -or $DevBranch -eq $Master) {
 
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
-Write-Host ">>> Git status: $gitStatus"
 if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false)
 {
     exit 1
 }
 
-# Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
+# Подтягиваем свежие изменения из master в текущую ветку
 Write-Host ">>> Merging $Master into $DevBranch ..."
 
-# Подтягиваем свежие изменения из master в текущую ветку
-git fetch $Origin --prune
+Write-Host ">>> Checkout to $Master"
+git checkout $Master | Out-Null
+
+Write-Host ">>> Pulling to $Master"
+git pull
+
+Write-Host ">>> Checkout to $DevBranch"
+git checkout $DevBranch | Out-Null
+
+Write-Host ">>> Merging $Master to $DevBranch"
+git merge --no-edit $Master
 
 # Пушим текущую ветку
-Write-Host ">>> Pushing to $Remote/$DevBranch..."
+Write-Host ">>> Pushing to $Remote/$DevBranch"
 git push $Remote "HEAD:$DevBranch"
 
+Write-Host ">>> Merging $DevBranch into $Iskra..."
+
 # Переключаемся на ветку iskra
+Write-Host ">>> Checkout to $Iskra"
 git checkout $Iskra | Out-Null
 
 # Подтягиваем свежие изменения из origin/iskra на локальную
-git fetch $Origin --prune
+Write-Host ">>> Pulling to $Iskra"
+git pull
 
-Write-Host ">>> Merging $DevBranch into $Iskra ..."
 # Подтягиваем изменения из нашей ветки в iskra
+Write-Host ">>> Merging $DevBranch into $Iskra"
 git merge --no-edit $DevBranch
 
 # Пушим изменения в iskra
