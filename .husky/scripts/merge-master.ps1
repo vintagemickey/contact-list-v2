@@ -36,6 +36,3 @@ if (-not (git merge --no-edit $Master)) {
     git merge --abort | Out-Null
     exit 1
 }
-
-Write-Host ">>> Pushing $DevBranch to $Origin"
-git push $Origin $DevBranch
