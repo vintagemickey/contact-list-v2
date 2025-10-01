@@ -40,32 +40,32 @@ catch
     # Write-Host ">>> Successfully created temporary branch $tmpBranch from $MainBranch"
 }
 
-# # Merge master
-# Write-Host ">>> Merging $Remote/$MainBranch..."
-# if (-not (git merge --no-edit "$Remote/$MainBranch")) {
-#     Write-Host "Conflict with $MainBranch — aborting."
-#     git merge --abort | Out-Null
-#     git checkout $CurrentBranch | Out-Null
-#     git branch -D $tmpBranch | Out-Null
-#     exit 1
-# }
+# Merge master
+Write-Host ">>> Merging $Remote/$MainBranch..."
+if (-not (git merge --no-edit "$Remote/$MainBranch")) {
+    # Write-Host "Conflict with $MainBranch — aborting."
+    git merge --abort | Out-Null
+    git checkout $CurrentBranch | Out-Null
+    git branch -D $tmpBranch | Out-Null
+    exit 1
+}
 
-# # Merge текущей ветки
-# Write-Host ">>> Merging $CurrentBranch..."
-# if (-not (git merge --no-edit $CurrentBranch)) {
-#     Write-Host "Conflict with $CurrentBranch — aborting."
-#     git merge --abort | Out-Null
-#     git checkout $CurrentBranch | Out-Null
-#     git branch -D $tmpBranch | Out-Null
-#     exit 1
-# }
+# Merge текущей ветки
+Write-Host ">>> Merging $CurrentBranch..."
+if (-not (git merge --no-edit $CurrentBranch)) {
+    # Write-Host "Conflict with $CurrentBranch — aborting."
+    git merge --abort | Out-Null
+    git checkout $CurrentBranch | Out-Null
+    git branch -D $tmpBranch | Out-Null
+    exit 1
+}
 
-# # Пушим в iskra
-# Write-Host ">>> Pushing to $Remote/$TestBranch..."
-# git push $Remote "HEAD:$TestBranch"
+# Пушим в iskra
+Write-Host ">>> Pushing to $Remote/$TestBranch..."
+git push $Remote "HEAD:$TestBranch"
 
-# # Возвращаемся обратно и удаляем временную
-# git checkout $CurrentBranch | Out-Null
-# git branch -D $tmpBranch | Out-Null
+# Возвращаемся обратно и удаляем временную
+git checkout $CurrentBranch | Out-Null
+git branch -D $tmpBranch | Out-Null
 
-# Write-Host ">>> Done! Merged into $Remote/$TestBranch"
+Write-Host ">>> Done! Merged into $Remote/$TestBranch"
