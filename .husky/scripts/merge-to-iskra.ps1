@@ -10,6 +10,7 @@ Write-Host ">>> Currently on $CurrentBranch"
 
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
+Write-Host ">>> Git status: $gitStatus"
 if (![string]::IsNullOrWhiteSpace($gitStatus)) {
     Write-Host "Working tree is dirty — commit or stash changes before running this script."
     exit 1
