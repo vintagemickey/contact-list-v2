@@ -1,5 +1,4 @@
-param
-(
+param(
     [string]$Origin = "origin",
     [string]$Master = "master",
     [string]$Iskra = "iskra"
@@ -16,49 +15,50 @@ if ($DevBranch -eq $Iskra -or $DevBranch -eq $Master) {
 
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
-if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false)
-{
+Write-Host ">>> Git status: '$gitStatus'"
+if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false) {
     exit 1
 }
 
-# Подтягиваем свежие изменения из master в текущую ветку
 Write-Host ">>> Merging $Master into $DevBranch ..."
 
 Write-Host ">>> Checkout to $Master"
 git checkout $Master | Out-Null
 
-Write-Host ">>> Pulling to $Master"
-git pull
+Write-Host ">>> Pulling latest $Master"
+git pull $Origin $Master
 
 Write-Host ">>> Checkout to $DevBranch"
 git checkout $DevBranch | Out-Null
 
-Write-Host ">>> Merging $Master to $DevBranch"
-git merge --no-edit $Master
+Write-Host ">>> Merging $Master into $DevBranch"
+if (-not (git merge --no-edit $Master)) {
+    git merge --abort | Out-Null
+    exit 1
+}
 
-# Пушим текущую ветку
-Write-Host ">>> Pushing to $Origin/$DevBranch"
+Write-Host ">>> Pushing $DevBranch to $Origin"
 git push $DevBranch
 
 Write-Host ">>> Merging $DevBranch into $Iskra..."
 
-# Переключаемся на ветку iskra
 Write-Host ">>> Checkout to $Iskra"
 git checkout $Iskra | Out-Null
 
-# Подтягиваем свежие изменения из origin/iskra на локальную 
-Write-Host ">>> Pulling to $Iskra"
-git pull
+Write-Host ">>> Pulling latest $Iskra"
+git pull $Origin $Iskra
 
-# Подтягиваем изменения из нашей ветки в iskra
 Write-Host ">>> Merging $DevBranch into $Iskra"
-git merge --no-edit $DevBranch
+if (-not (git merge --no-edit $DevBranch)) {
+    git merge --abort | Out-Null
+    git checkout $DevBranch | Out-Null
+    exit 1
+}
 
-# Пушим изменения в iskra
-Write-Host ">>> Pushing to $Origin/$Iskra..."
+Write-Host ">>> Pushing $Iskra to $Origin"
 git push $Iskra
 
-# Возвращаемся обратно
+# Возвращаемся обратно на dev-ветку
 git checkout $DevBranch | Out-Null
 
 Write-Host ">>> Done! $DevBranch merged into $Origin/$Iskra"
