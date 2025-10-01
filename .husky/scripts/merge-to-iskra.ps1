@@ -20,6 +20,23 @@ if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false) {
     exit 1
 }
 
+Write-Host ">>> Merging $Master into $Iskra ..."
+
+Write-Host ">>> Checkout to $Master"
+git checkout $Master | Out-Null
+
+Write-Host ">>> Pulling latest $Master"
+git pull $Origin $Master
+
+Write-Host ">>> Checkout to $Iskra"
+git checkout $Iskra | Out-Null
+
+Write-Host ">>> Merging $Master into $Iskra"
+if (-not (git merge --no-edit $Master)) {
+    git merge --abort | Out-Null
+    exit 1
+}
+
 Write-Host ">>> Merging $DevBranch into $Iskra... "
 
 Write-Host ">>> Checkout to $Iskra"
