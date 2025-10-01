@@ -9,12 +9,12 @@ $CurrentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host ">>> Currently on $CurrentBranch"
 
 # Проверяем чистоту рабочей директории
-# $gitStatus = git status --porcelain
-# Write-Host ">>> Git status: $gitStatus"
-# if (![string]::IsNullOrWhiteSpace($gitStatus)) {
-#     Write-Host "Working tree is dirty — commit or stash changes before running this script."
-#     exit 1
-# }
+$gitStatus = git status --porcelain
+Write-Host ">>> Git status: $gitStatus"
+if (![string]::IsNullOrWhiteSpace($gitStatus)) {
+    Write-Host "Working tree is dirty — commit or stash changes before running this script."
+    exit 1
+}
 
 Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
 Write-Host ">>> we were here"
