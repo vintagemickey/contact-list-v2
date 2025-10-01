@@ -1,4 +1,5 @@
-param(
+param
+(
     [string]$Remote = "origin",
     [string]$MainBranch = "master",
     [string]$TestBranch = "iskra"
@@ -11,8 +12,9 @@ Write-Host ">>> Currently on $CurrentBranch"
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
 Write-Host ">>> Git status: $gitStatus"
-if (![string]::IsNullOrWhiteSpace($gitStatus)) {
-    Write-Host "Working tree is dirty — commit or stash changes before running this script."
+if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false)
+{
+    # Working tree is dirty — commit or stash changes before running this script.
     exit 1
 }
 
