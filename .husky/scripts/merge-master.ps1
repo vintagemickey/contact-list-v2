@@ -20,25 +20,22 @@ if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false) {
     exit 1
 }
 
-Write-Host ">>> Merging $DevBranch into $Iskra... "
+Write-Host ">>> Merging $Master into $DevBranch ..."
 
-Write-Host ">>> Checkout to $Iskra"
-git checkout $Iskra | Out-Null
+Write-Host ">>> Checkout to $Master"
+git checkout $Master | Out-Null
 
-Write-Host ">>> Pulling latest $Iskra"
-git pull $Origin $Iskra
+Write-Host ">>> Pulling latest $Master"
+git pull $Origin $Master
 
-Write-Host ">>> Merging $DevBranch into $Iskra"
-if (-not (git merge --no-edit $DevBranch)) {
+Write-Host ">>> Checkout to $DevBranch"
+git checkout $DevBranch | Out-Null
+
+Write-Host ">>> Merging $Master into $DevBranch"
+if (-not (git merge --no-edit $Master)) {
     git merge --abort | Out-Null
-    git checkout $DevBranch | Out-Null
     exit 1
 }
 
-Write-Host ">>> Pushing $Iskra to $Origin"
-git push $Origin $Iskra
-
-# Возвращаемся обратно на dev-ветку
-git checkout $DevBranch | Out-Null
-
-Write-Host ">>> Done! $DevBranch merged into $Origin/$Iskra"
+Write-Host ">>> Pushing $DevBranch to $Origin"
+git push $Origin $DevBranch
