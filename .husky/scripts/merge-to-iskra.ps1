@@ -24,14 +24,15 @@ git fetch $Remote --prune
 $timestamp = [int][double]::Parse((Get-Date -UFormat %s))
 $tmpBranch = "tmp/merge-$($CurrentBranch.Replace('/', '-'))-$timestamp"
 
+Write-Host ">>> Trying to checkout temporary branch $tmpBranch from $Remote/$TestBranch ..."
 try {
     git checkout -b $tmpBranch "$Remote/$TestBranch"
-Write-Host ">>> and here"
-
+    Write-Host ">>> Successfully created temporary branch $tmpBranch"
 }
 catch {
     Write-Host "Remote $Remote/$TestBranch not found — creating from $Remote/$MainBranch"
     git checkout -b $tmpBranch "$Remote/$MainBranch"
+    Write-Host ">>> Successfully created temporary branch $tmpBranch from $MainBranch"
 }
 
 # Merge master
