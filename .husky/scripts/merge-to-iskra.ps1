@@ -38,7 +38,7 @@ if (-not (git merge --no-edit $Master)) {
 }
 
 Write-Host ">>> Pushing $DevBranch to $Origin"
-git push $DevBranch
+git push $Origin $DevBranch
 
 Write-Host ">>> Merging $DevBranch into $Iskra... "
 
