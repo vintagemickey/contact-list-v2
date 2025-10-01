@@ -42,24 +42,6 @@ Write-Host ">>> Merging $DevBranch into $Iskra ..."
 # Подтягиваем изменения из нашей ветки в iskra
 git merge --no-edit $DevBranch
 
-# Merge master в текущую ветку
-# Write-Host ">>> Merging $Remote/$MainBranch..."
-# if (-not (git merge --no-edit "$Remote/$MainBranch")) {
-#     # Write-Host "Conflict with $MainBranch — aborting."
-#     git merge --abort | Out-Null
-#     git checkout $CurrentBranch | Out-Null
-#     exit 1
-# }
-
-# # Merge текущей ветки
-# Write-Host ">>> Merging $CurrentBranch..."
-# if (-not (git merge --no-edit $CurrentBranch)) {
-#     # Write-Host "Conflict with $CurrentBranch — aborting."
-#     git merge --abort | Out-Null
-#     git checkout $CurrentBranch | Out-Null
-#     exit 1
-# }
-
 # Пушим изменения в iskra
 Write-Host ">>> Pushing to $Remote/$Iskra..."
 git push $Remote "HEAD:$Iskra"
