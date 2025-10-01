@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
+    echo remote_ref
 
 # читаем аргументы от git
 while read local_ref local_sha remote_ref remote_sha
 do
   case "$remote_ref" in
     refs/heads/iskra)
-    echo $remote_ref
       echo "Skip hook: pushing directly to iskra"
       exit 0
       ;;
