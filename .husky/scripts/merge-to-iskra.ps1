@@ -38,7 +38,7 @@ git merge --no-edit $Master
 
 # Пушим текущую ветку
 Write-Host ">>> Pushing to $Remote/$DevBranch"
-git push $Remote "HEAD:$DevBranch"
+git push --set-upstream $Remote $DevBranch
 
 Write-Host ">>> Merging $DevBranch into $Iskra..."
 
@@ -56,7 +56,7 @@ git merge --no-edit $DevBranch
 
 # Пушим изменения в iskra
 Write-Host ">>> Pushing to $Remote/$Iskra..."
-git push $Remote "HEAD:$Iskra"
+git push --set-upstream $Remote $Iskra
 
 # Возвращаемся обратно
 git checkout $DevBranch | Out-Null
