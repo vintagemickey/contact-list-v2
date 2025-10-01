@@ -46,7 +46,7 @@ Write-Host ">>> Merging $DevBranch into $Iskra..."
 Write-Host ">>> Checkout to $Iskra"
 git checkout $Iskra | Out-Null
 
-# Подтягиваем свежие изменения из origin/iskra на локальную
+# Подтягиваем свежие изменения из origin/iskra на локальную 
 Write-Host ">>> Pulling to $Iskra"
 git pull
 
