@@ -6,6 +6,7 @@ param(
 
 # Определяем текущую ветку
 $CurrentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
+Write-Host ">>> Currently on $CurrentBranch"
 
 # Проверяем чистоту рабочей директории
 $gitStatus = git status --porcelain
