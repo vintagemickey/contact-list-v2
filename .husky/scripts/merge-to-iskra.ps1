@@ -8,7 +8,8 @@ param(
 $CurrentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
 
 # Проверяем чистоту рабочей директории
-if ((git status --porcelain).Trim() -ne "") {
+$gitStatus = git status --porcelain
+if (![string]::IsNullOrWhiteSpace($gitStatus)) {
     Write-Host "Working tree is dirty — commit or stash changes before running this script."
     exit 1
 }
