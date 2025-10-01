@@ -19,26 +19,26 @@ if ([string]::IsNullOrWhiteSpace($gitStatus) -eq $false)
 }
 
 Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
-Write-Host ">>> we were here"
+# Write-Host ">>> we were here"
 # Подтягиваем свежие изменения
 git fetch $Remote --prune
 
 # Создаём временную ветку от iskra (или от master, если iskra нет)
-$timestamp = [int][double]::Parse((Get-Date -UFormat %s))
-$tmpBranch = "tmp/merge-$($CurrentBranch.Replace('/', '-'))-$timestamp"
+# $timestamp = [int][double]::Parse((Get-Date -UFormat %s))
+# $tmpBranch = "tmp/merge-$($CurrentBranch.Replace('/', '-'))-$timestamp"
 
-Write-Host ">>> Trying to checkout temporary branch $tmpBranch from $Remote/$TestBranch ..."
-try
-{
-    git checkout -b $tmpBranch "$Remote/$TestBranch"
-    # Write-Host ">>> Successfully created temporary branch $tmpBranch"
-}
-catch
-{
-    # Write-Host "Remote $Remote/$TestBranch not found — creating from $Remote/$MainBranch" 
-    git checkout -b $tmpBranch "$Remote/$MainBranch"
-    # Write-Host ">>> Successfully created temporary branch $tmpBranch from $MainBranch"
-}
+# Write-Host ">>> Trying to checkout temporary branch $tmpBranch from $Remote/$TestBranch ..."
+# try
+# {
+#     git checkout -b $tmpBranch "$Remote/$TestBranch"
+#     # Write-Host ">>> Successfully created temporary branch $tmpBranch"
+# }
+# catch
+# {
+#     # Write-Host "Remote $Remote/$TestBranch not found — creating from $Remote/$MainBranch" 
+#     git checkout -b $tmpBranch "$Remote/$MainBranch"
+#     # Write-Host ">>> Successfully created temporary branch $tmpBranch from $MainBranch"
+# }
 
 # Merge master
 Write-Host ">>> Merging $Remote/$MainBranch..."
