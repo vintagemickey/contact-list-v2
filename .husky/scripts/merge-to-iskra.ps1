@@ -16,7 +16,7 @@ if (![string]::IsNullOrWhiteSpace($gitStatus)) {
 }
 
 Write-Host ">>> Merging $MainBranch and $CurrentBranch into $TestBranch ..."
-
+Write-Host ">>> we were here"
 # Подтягиваем свежие изменения
 git fetch $Remote --prune
 
@@ -26,6 +26,8 @@ $tmpBranch = "tmp/merge-$($CurrentBranch.Replace('/', '-'))-$timestamp"
 
 try {
     git checkout -b $tmpBranch "$Remote/$TestBranch"
+Write-Host ">>> and here"
+
 }
 catch {
     Write-Host "Remote $Remote/$TestBranch not found — creating from $Remote/$MainBranch"
