@@ -8,4 +8,4 @@ if [ "$current_branch" = "master" ] || [ "$current_branch" = "iskra" ]; then
   exit 0
 fi
 
-powershell -ExecutionPolicy Bypass -File ./.husky/scripts/merge-to-iskra.ps1
+powershell -ExecutionPolicy Bypass -File ./.husky/scripts/merge-master.ps1
