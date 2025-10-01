@@ -50,7 +50,6 @@ git pull $Origin $Iskra
 
 Write-Host ">>> Merging $DevBranch into $Iskra"
 if (-not (git merge --no-edit $DevBranch)) {
-    Write-Host ">>> Conflict with $DevBranch — aborting."
     git merge --abort | Out-Null
     git checkout $DevBranch | Out-Null
     exit 1
