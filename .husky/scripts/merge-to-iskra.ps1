@@ -38,7 +38,7 @@ if (-not (git merge --no-edit $Master)) {
 }
 
 Write-Host ">>> Pushing $DevBranch to $Origin"
-git push $Origin $DevBranch
+git push $DevBranch
 
 Write-Host ">>> Merging $DevBranch into $Iskra..."
 
@@ -56,7 +56,7 @@ if (-not (git merge --no-edit $DevBranch)) {
 }
 
 Write-Host ">>> Pushing $Iskra to $Origin"
-git push $Origin $Iskra
+git push $Iskra
 
 # Возвращаемся обратно на dev-ветку
 git checkout $DevBranch | Out-Null
