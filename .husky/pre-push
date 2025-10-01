@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# читаем аргументы от git
+while read local_ref local_sha remote_ref remote_sha
+do
+  case "$remote_ref" in
+    refs/heads/iskra)
+      echo "Skip hook: pushing directly to iskra"
+      exit 0
+      ;;
+  esac
+done
+
+powershell -ExecutionPolicy Bypass -File ./.husky/scripts/merge-to-iskra.ps1
