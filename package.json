@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "node .husky/install.mjs",
+    "merge-to-iskra": "powershell -ExecutionPolicy Bypass -File ./.husky/scripts/merge-to-iskra.ps1"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",

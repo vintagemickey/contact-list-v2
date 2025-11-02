@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Только если текущая ветка не master и не iskra
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$current_branch" = "master" ] || [ "$current_branch" = "iskra" ]; then
+  echo "Skipping pre-push for branch $current_branch"
+  exit 0
+fi
+
+powershell -ExecutionPolicy Bypass -File ./.husky/scripts/merge-master.ps1
